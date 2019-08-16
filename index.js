@@ -32,13 +32,10 @@ app.post("/petition", function(req, res) {
     db.addSignature(req.body.firstname, req.body.lastname, req.body.signature)
         .then(id => {
             console.log(id);
-            return db.getSignatures();
+            req.session.id = id;
         })
         //if insert is successful then set session cookie and redirect to /thanks
         .then(function() {
-            req.session.firstname = req.body.firstname;
-            req.session.lastname = req.body.lastname;
-            req.session.signature = req.body.signature;
             res.redirect("/petition/thanks");
         })
         .catch(function(err) {
