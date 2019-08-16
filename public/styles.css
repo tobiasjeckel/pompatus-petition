@@ -1,3 +1,44 @@
-canvas {
+#sig {
     border: 1px solid black;
+    display: block;
+    width: 600px;
+    height: 150px;
+}
+
+header {
+    /* height: 100px; */
+    background-color: beige;
+    border-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+main {
+    padding: 5px;
+    flex-grow: 1;
+}
+
+footer {
+    background-color: beige;
+    padding-left: 5px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin: 0;
+    font-family: "Helvetica";
+}
+
+.errormessage {
+    display: none;
+}
+
+.errormessage.on {
+    display: block;
 }
