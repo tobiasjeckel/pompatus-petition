@@ -1,6 +1,23 @@
 const spicedPg = require("spiced-pg");
-const db = spicedPg("postgres:postgres:postgres@localhost:5432/cities");
+const db = spicedPg("postgres:postgres:postgres@localhost:5432/petition");
 
-exports.getCities = function() {
-    return db.query(`SELECT * FROM cities`);
+exports.testFunction = function() {
+    console.log("db is working");
+};
+
+exports.getSignatures = function() {
+    return db.query(`SELECT firstname, lastname FROM signatures`);
+};
+
+exports.addSignature = function(firstname, lastname, signature) {
+    return db
+        .query(
+            `INSERT INTO signatures (firstname, lastname, signature)
+        VALUES ($1, $2, $3)
+        RETURNING id`,
+            [firstname, lastname, signature]
+        )
+        .then(({ rows }) => {
+            return rows[0].id;
+        });
 };

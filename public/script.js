@@ -3,18 +3,18 @@ var isDrawing = false;
 var x = 0;
 var y = 0;
 
+const canvas = document.getElementById("canvas");
 const sig = document.getElementById("sig");
-const sigData = document.getElementById("sigData");
-const context = sig.getContext("2d");
+const context = canvas.getContext("2d");
 
 // Add the event listeners for mousedown, mousemove, and mouseup
-sig.addEventListener("mousedown", e => {
+canvas.addEventListener("mousedown", e => {
     x = e.offsetX;
     y = e.offsetY;
     isDrawing = true;
 });
 
-sig.addEventListener("mousemove", e => {
+canvas.addEventListener("mousemove", e => {
     if (isDrawing === true) {
         drawLine(context, x, y, e.offsetX, e.offsetY);
         x = e.offsetX;
@@ -22,13 +22,13 @@ sig.addEventListener("mousemove", e => {
     }
 });
 
-sig.addEventListener("mouseup", e => {
+canvas.addEventListener("mouseup", e => {
     if (isDrawing === true) {
         drawLine(context, x, y, e.offsetX, e.offsetY);
         x = 0;
         y = 0;
         isDrawing = false;
-        sigData.value = sig.toDataURL();
+        sig.value = canvas.toDataURL();
     }
 });
 

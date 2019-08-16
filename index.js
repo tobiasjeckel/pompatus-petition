@@ -1,9 +1,17 @@
-// const db = require("db");
+const db = require("./db");
 const express = require("express");
 const app = express();
 const hb = require("express-handlebars");
+const cookieSession = require("cookie-session");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
+
+app.use(
+    cookieSession({
+        secret: `secretPorsche`,
+        maxAge: 1000 * 60 * 60 * 24 * 14
+    })
+);
 
 app.use(
     express.urlencoded({
@@ -17,20 +25,29 @@ app.get("/", function(req, res) {
 }); //redirect route
 
 app.get("/petition", function(req, res) {
-    res.render("welcome", {});
+    res.render("petition", {});
 }); //renders welcome template
 
 app.post("/petition", function(req, res) {
-    req.body(); // expect first name, last name and signature
-    res.send(); // send to database
-
-    //if insert into database fails then
-    res.render("welcome", {}); // add class on to error message
-    //if insert is successful then redirect to /thanks
-    res.redirects("thanks", {});
+    db.addSignature(req.body.firstname, req.body.lastname, req.body.signature)
+        .then(id => {
+            console.log(id);
+            return db.getSignatures();
+        })
+        //if insert is successful then set session cookie and redirect to /thanks
+        .then(function() {
+            req.session.firstname = req.body.firstname;
+            req.session.lastname = req.body.lastname;
+            req.session.signature = req.body.signature;
+            res.redirect("/petition/thanks");
+        })
+        .catch(function(err) {
+            console.log(err);
+            res.render("welcome", {}); // add class on to error message
+        });
 }); //post user input to database
 
-app.get("/thanks", function(req, res) {
+app.get("/petition/thanks", function(req, res) {
     res.render("thanks", {});
 }); //renders thanks for signing template, set cookie to remember that user signed
 
