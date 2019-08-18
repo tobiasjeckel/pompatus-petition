@@ -45,12 +45,22 @@ app.post("/petition", function(req, res) {
 }); //post user input to database
 
 app.get("/petition/thanks", function(req, res) {
-    res.render("thanks", {});
-}); //renders thanks for signing template, set cookie to remember that user signed
+    db.getName(req.session.id).then(data => {
+        res.render("thanks", {
+            firstname: data.rows[0].firstname
+        });
+    });
+}); //renders thanks for signing template
 
-app.get("/signers", function(req, res) {
-    res.render("signers", {});
-}); //renders thanks for signing template, set cookie to remember that user signed
+app.get("/petition/signers", function(req, res) {
+    db.getSignatures().then(data => {
+        res.render("signers", {
+            names: data.rows
+        });
+    });
+
+    // console.log("names of signers: ", db.getSignatures());
+}); //renders list of signers template
 
 app.listen(8080, () => {
     console.log("my petition server is running");

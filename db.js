@@ -6,7 +6,11 @@ exports.testFunction = function() {
 };
 
 exports.getSignatures = function() {
-    return db.query(`SELECT firstname, lastname FROM signatures`);
+    return db
+        .query(`SELECT firstname, lastname FROM signatures`)
+        .catch(function(err) {
+            console.log(err);
+        });
 };
 
 exports.addSignature = function(firstname, lastname, signature) {
@@ -19,5 +23,20 @@ exports.addSignature = function(firstname, lastname, signature) {
         )
         .then(({ rows }) => {
             return rows[0].id;
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+};
+
+exports.getName = function(id) {
+    return db
+        .query(
+            `SELECT firstname
+        FROM signatures WHERE id = $1`,
+            [id]
+        )
+        .catch(err => {
+            console.log(err);
         });
 };
