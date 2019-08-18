@@ -65,9 +65,11 @@ app.post("/petition", function(req, res) {
 
 app.get("/petition/thanks", function(req, res) {
     if (req.session.id) {
-        db.getName(req.session.id).then(data => {
+        db.getNameAndSignature(req.session.id).then(data => {
+            console.log(data);
             res.render("thanks", {
-                firstname: data.rows[0].firstname
+                firstname: data.rows[0].firstname,
+                signature: data.rows[0].signature
             });
         });
     } else {

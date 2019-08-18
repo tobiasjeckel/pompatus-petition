@@ -22,10 +22,10 @@ exports.addSignature = function(firstname, lastname, signature) {
     );
 };
 
-exports.getName = function(id) {
+exports.getNameAndSignature = function(id) {
     return db
         .query(
-            `SELECT firstname
+            `SELECT firstname, signature
         FROM signatures WHERE id = $1`,
             [id]
         )
