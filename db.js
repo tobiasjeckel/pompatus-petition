@@ -14,19 +14,12 @@ exports.getSignatures = function() {
 };
 
 exports.addSignature = function(firstname, lastname, signature) {
-    return db
-        .query(
-            `INSERT INTO signatures (firstname, lastname, signature)
+    return db.query(
+        `INSERT INTO signatures (firstname, lastname, signature)
         VALUES ($1, $2, $3)
         RETURNING id`,
-            [firstname, lastname, signature]
-        )
-        .then(({ rows }) => {
-            return rows[0].id;
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
+        [firstname, lastname, signature]
+    );
 };
 
 exports.getName = function(id) {

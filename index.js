@@ -3,12 +3,15 @@ const express = require("express");
 const app = express();
 const hb = require("express-handlebars");
 const cookieSession = require("cookie-session");
+const csurf = require("csurf");
+
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
+//middleware
 app.use(
     cookieSession({
-        secret: `secretPorsche`,
+        secret: `supersecret`,
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
@@ -18,54 +21,72 @@ app.use(
         extended: false
     })
 );
+
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.setHeader("X-frame-Options", "DENY");
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
 app.use(express.static("./public")); //for css
+
+//middleware end
 
 app.get("/", function(req, res) {
     res.redirect("/petition");
 }); //redirect route
 
 app.get("/petition", function(req, res) {
-    res.render("petition", {});
+    if (req.session.id) {
+        res.redirect("/petition/signers");
+    } else {
+        res.render("petition", {});
+    }
 }); //renders welcome template
 
 app.post("/petition", function(req, res) {
     db.addSignature(req.body.firstname, req.body.lastname, req.body.signature)
-        .then(id => {
-            console.log(id);
-            req.session.id = id;
-        })
-        //if insert is successful then set session cookie and redirect to /thanks
-        .then(function() {
+        .then(data => {
+            console.log(data);
+            req.session.id = data.rows[0].id;
             res.redirect("/petition/thanks");
         })
+        //if insert is successful then set session cookie and redirect to /thanks
         .catch(function(err) {
             console.log(err);
-            res.render("welcome", {}); // add class on to error message
+            res.render("petition", {
+                csrfToken: req.csrfToken(),
+                error: true
+            }); // add class on to error message
         });
 }); //post user input to database
 
 app.get("/petition/thanks", function(req, res) {
-    db.getName(req.session.id).then(data => {
-        res.render("thanks", {
-            firstname: data.rows[0].firstname
+    if (req.session.id) {
+        db.getName(req.session.id).then(data => {
+            res.render("thanks", {
+                firstname: data.rows[0].firstname
+            });
         });
-    });
+    } else {
+        res.redirect("/petition");
+    }
 }); //renders thanks for signing template
 
 app.get("/petition/signers", function(req, res) {
-    db.getSignatures().then(data => {
-        res.render("signers", {
-            names: data.rows
+    if (req.session.id) {
+        db.getSignatures().then(data => {
+            res.render("signers", {
+                names: data.rows
+            });
         });
-    });
-
-    // console.log("names of signers: ", db.getSignatures());
-}); //renders list of signers template
+    } else {
+        res.redirect("/petition");
+    }
+});
 
 app.listen(8080, () => {
     console.log("my petition server is running");
 });
-
-// db.getCities().then(function(result) {
-//     console.log(result);
-// });

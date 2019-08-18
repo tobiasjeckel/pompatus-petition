@@ -2,8 +2,10 @@
 
 <!-- <img width="600" src="https://i.redd.it/jumtj2ydqeg31.jpg" style="display:block"> -->
 
-<p class="errormessage">Whoops, something went wrong!</p>
 <p>Sign Here!</p>
+{{#if error}}
+<p class="errormessage">Whoops, something went wrong! Please try again!</p>
+{{/if}}
 
 <canvas id="canvas"  width="600" height="150"></canvas>
 
@@ -11,6 +13,8 @@
     <input name="firstname" required>First Name</input>
     <input name="lastname" required>Last Name</input>
     <input name="signature" type="hidden" id="sig">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button id="submit-button" value="submit">Submit</button>
-    <!-- <input name="_csrf" type="hidden" value="{{csrfToken}}"> -->
 </post>
+
+<script src="/script.js" charset="utf-8"></script>

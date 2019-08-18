@@ -37,9 +37,5 @@ body {
 }
 
 .errormessage {
-    display: none;
-}
-
-.errormessage.on {
-    display: block;
+    color: red;
 }
