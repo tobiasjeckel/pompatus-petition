@@ -22,6 +22,7 @@ app.use(
         extended: false
     })
 );
+app.use(express.static("./public")); //for css
 
 app.use(csurf());
 
@@ -31,8 +32,13 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(express.static("./public")); //for css
-
+app.use(function(req, res, next) {
+    if (!req.session.id && req.url != "/registration" && req.url != "/login") {
+        res.redirect("/registration");
+    } else {
+        next();
+    }
+});
 //middleware end
 
 app.get("/", function(req, res) {
@@ -40,7 +46,6 @@ app.get("/", function(req, res) {
 }); //redirect route
 
 app.get("/registration", function(req, res) {
-    console.log(req.session);
     res.render("registration", {});
 });
 
@@ -54,11 +59,21 @@ app.get("/petition", function(req, res) {
         req.session.id,
         req.session.firstname
     );
-    if (req.session.id) {
-        res.render("petition", {});
-    } else {
-        res.redirect("/registration");
-    }
+    db.getSignature(req.session.id)
+        .then(data => {
+            console.log(data);
+            if (data.rows[0].user_id == undefined) {
+                res.render("petition");
+                console.log("signature not available yet");
+            } else {
+                console.log("this user has signed the petition ", data.user_id);
+                res.redirect("/petition/thanks");
+            }
+        })
+        .catch(err => {
+            console.log("signature not available yet: ", err);
+            res.render("petition", {});
+        });
 }); //renders sign petition template
 
 app.post("/registration", function(req, res) {
@@ -74,7 +89,7 @@ app.post("/registration", function(req, res) {
             .catch(function(err) {
                 console.log(err);
                 res.render("registration", {
-                    csrfToken: req.csrfToken(),
+                    // csrfToken: req.csrfToken(),
                     error: true
                 });
             });
@@ -91,18 +106,19 @@ app.post("/petition", function(req, res) {
         .catch(function(err) {
             console.log(err);
             res.render("petition", {
-                csrfToken: req.csrfToken(),
+                // csrfToken: req.csrfToken(),
                 error: true
             }); // add class on to error message
         });
 }); //post user input to database
 
 app.get("/petition/thanks", function(req, res) {
-    console.log(
-        "at thanks site the user id and name is: ",
-        req.session.id,
-        req.session.firstname
-    );
+    // console.log(
+    //     "at thanks site the user id and name is: ",
+    //     req.session.id,
+    //     req.session.firstname
+    // );
+
     db.getSignature(req.session.id)
         .then(data => {
             res.render("thanks", {
@@ -124,10 +140,11 @@ app.post("/login", function(req, res) {
                 console.log("match: ", match);
                 if (match) {
                     req.session.id = data.rows[0].id;
+                    req.session.firstname = data.rows[0].firstname;
                     res.redirect("/petition");
                 } else {
                     res.render("login", {
-                        csrfToken: req.csrfToken(),
+                        // csrfToken: req.csrfToken(),
                         error: true
                     });
                 }
@@ -136,22 +153,18 @@ app.post("/login", function(req, res) {
         .catch(err => {
             console.log(err);
             res.render("login", {
-                csrfToken: req.csrfToken(),
+                // csrfToken: req.csrfToken(),
                 error: true
             });
         });
 });
 
 app.get("/petition/signers", function(req, res) {
-    if (req.session.id) {
-        db.getSignatures().then(data => {
-            res.render("signers", {
-                names: data.rows
-            });
+    db.getSignatures().then(data => {
+        res.render("signers", {
+            names: data.rows
         });
-    } else {
-        res.redirect("/petition");
-    }
+    });
 });
 
 app.listen(8080, () => {

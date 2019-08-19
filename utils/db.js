@@ -26,7 +26,7 @@ exports.addSignature = function(user_id, signature) {
 
 exports.getSignature = function(user_id) {
     return db.query(
-        `SELECT signature
+        `SELECT signature, user_id
         FROM signatures WHERE user_id = $1`,
         [user_id]
     );
