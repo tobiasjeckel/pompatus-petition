@@ -1,0 +1,19 @@
+<p> Please register to support our petition for World Peace!</p>
+
+
+<p>Register Here!</p>
+{{#if error}}
+<p class="errormessage">Whoops, something went wrong! Please try again!</p>
+{{/if}}
+
+
+<form method="POST">
+    <input name="firstname" required>First Name</input>
+    <input name="lastname" required>Last Name</input>
+    <input name="email" required>Email Adress</input>
+    <input type ="password" id="pass" name="password" minlength="6" required>Password (min 6 characters)</input>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button id="submit-button" value="submit">SIGN UP</button>
+</post>
+
+<p> If you are already a member, please <a href="/login">log in</a>.<p>

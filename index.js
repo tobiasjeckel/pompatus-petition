@@ -1,7 +1,8 @@
-const db = require("./db");
+const db = require("./utils/db");
 const express = require("express");
 const app = express();
 const hb = require("express-handlebars");
+const bc = require("./utils/bc");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
 
@@ -35,8 +36,16 @@ app.use(express.static("./public")); //for css
 //middleware end
 
 app.get("/", function(req, res) {
-    res.redirect("/petition");
+    res.redirect("/registration");
 }); //redirect route
+
+app.get("/registration", function(req, res) {
+    res.render("registration", {});
+});
+
+app.get("/login", function(req, res) {
+    res.render("login", {});
+});
 
 app.get("/petition", function(req, res) {
     if (req.session.id) {
@@ -44,7 +53,18 @@ app.get("/petition", function(req, res) {
     } else {
         res.render("petition", {});
     }
-}); //renders welcome template
+}); //renders sign petition template
+
+app.post("/registration", function(req, res) {
+    bc.hash(req.body.password).then(hash => {
+        console.log("hash: ", hash);
+    db.addUser(
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email,
+        hash
+    );
+});
 
 app.post("/petition", function(req, res) {
     db.addSignature(req.body.firstname, req.body.lastname, req.body.signature)
@@ -92,3 +112,13 @@ app.get("/petition/signers", function(req, res) {
 app.listen(8080, () => {
     console.log("my petition server is running");
 });
+
+// bc.hash("12345").then(hash => {
+//     console.log("hash: ", hash);
+//     //compare
+//     bc.compare("12345", hash)
+//         .then(match => {
+//             console.log("match: ", match);
+//         })
+//         .catch(error => console.log(error));
+// });

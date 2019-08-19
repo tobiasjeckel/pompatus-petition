@@ -7,25 +7,30 @@
 
 header {
     /* height: 100px; */
-    background-color: beige;
+    background-color: #222831;
     border-width: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    color: #00adb5;
 }
 
 main {
     padding: 5px;
     flex-grow: 1;
+    background-color: #eeeeee;
 }
 
 footer {
-    background-color: beige;
+    background-color: #393e46;
     padding-left: 5px;
     height: 100px;
     flex-shrink: 0;
     bottom: 0px;
+    color: #eeeeee;
+    display: flex;
+    align-items: center;
 }
 
 body {
@@ -38,4 +43,8 @@ body {
 
 .errormessage {
     color: red;
+}
+
+input {
+    display: block;
 }
