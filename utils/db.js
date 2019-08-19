@@ -9,37 +9,32 @@ exports.addUser = function(firstname, lastname, email, hash) {
     return db.query(
         `INSERT INTO users (firstname, lastname, email, password)
         VALUES ($1, $2, $3, $4)
-        RETURNING id
+        RETURNING id, firstname
         `,
         [firstname, lastname, email, hash]
     );
-};
-
-exports.getSignatures = function() {
-    return db
-        .query(`SELECT firstname, lastname FROM signatures`)
-        .catch(function(err) {
-            console.log(err);
-        });
 };
 
 exports.addSignature = function(user_id, signature) {
     return db.query(
         `INSERT INTO signatures (user_id, signature)
         VALUES ($1, $2)
-        RETURNING id`,
+        RETURNING user_id`,
         [user_id, signature]
     );
 };
 
-exports.getNameAndSignature = function(id) {
-    return db
-        .query(
-            `SELECT firstname, signature
-        FROM signatures WHERE id = $1`,
-            [id]
-        )
-        .catch(err => {
-            console.log(err);
-        });
+exports.getSignature = function(user_id) {
+    return db.query(
+        `SELECT signature
+        FROM signatures WHERE user_id = $1`,
+        [user_id]
+    );
+};
+
+exports.getHash = function(email) {
+    return db.query(
+        `SELECT password, id, firstname FROM users WHERE email = $1`,
+        [email]
+    );
 };

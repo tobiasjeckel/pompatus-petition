@@ -48,3 +48,7 @@ body {
 input {
     display: block;
 }
+
+canvas {
+    background-color: white;
+}

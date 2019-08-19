@@ -9,9 +9,7 @@
 <canvas id="canvas"  width="600" height="150"></canvas>
 
 <form method="POST">
-    <input name="firstname" required>First Name</input>
-    <input name="lastname" required>Last Name</input>
-    <input name="signature" type="hidden" id="sig">
+    <input type="hidden" name="signature"  id="sig">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <button id="submit-button" value="submit">Submit</button>
 </post>
