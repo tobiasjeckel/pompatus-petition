@@ -53,6 +53,10 @@ app.get("/login", function(req, res) {
     res.render("login", {});
 });
 
+app.get("/profile", function(req, res) {
+    res.render("profile", {});
+});
+
 app.get("/petition", function(req, res) {
     console.log(
         "at petition site the user id and name is: ",
@@ -76,6 +80,45 @@ app.get("/petition", function(req, res) {
         });
 }); //renders sign petition template
 
+app.get("/petition/thanks", function(req, res) {
+    db.getSignature(req.session.id)
+        .then(data => {
+            res.render("thanks", {
+                firstname: req.session.firstname,
+                signature: data.rows[0].signature
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            // res.redirect("/login");
+        });
+}); //renders thanks for signing template
+
+app.get("/petition/signers", function(req, res) {
+    db.getSigners()
+        .then(data => {
+            res.render("signers", {
+                firstname: data.rows.firstname,
+                lastname: data.rows.lastname,
+                age: data.rows.age,
+                city: data.rows.city,
+                url: data.rows.url
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+app.get("/logout", function(req, res) {
+    if (req.session) {
+        req.session = null;
+        res.redirect("/login");
+    } else {
+        res.redirect("/login");
+    }
+});
+
 app.post("/registration", function(req, res) {
     bc.hash(req.body.password).then(hash => {
         // console.log("hash: ", hash);
@@ -84,7 +127,7 @@ app.post("/registration", function(req, res) {
                 // console.log(data);
                 req.session.id = data.rows[0].id;
                 req.session.firstname = data.rows[0].firstname;
-                res.redirect("/petition");
+                res.redirect("/profile");
             })
             .catch(function(err) {
                 console.log(err);
@@ -94,6 +137,20 @@ app.post("/registration", function(req, res) {
                 });
             });
     });
+});
+
+app.post("/profile", function(req, res) {
+    db.addProfile(req.body.age, req.body.city, req.body.url, req.session.id)
+        .then(data => {
+            console.log("successful enter of profile data: ", data);
+            res.redirect("/petition");
+        })
+        .catch(function(err) {
+            console.log("error when posting profile", err);
+            res.render("profile", {
+                error: true
+            });
+        });
 });
 
 app.post("/petition", function(req, res) {
@@ -111,26 +168,6 @@ app.post("/petition", function(req, res) {
             }); // add class on to error message
         });
 }); //post user input to database
-
-app.get("/petition/thanks", function(req, res) {
-    // console.log(
-    //     "at thanks site the user id and name is: ",
-    //     req.session.id,
-    //     req.session.firstname
-    // );
-
-    db.getSignature(req.session.id)
-        .then(data => {
-            res.render("thanks", {
-                firstname: req.session.firstname,
-                signature: data.rows[0].signature
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            // res.redirect("/login");
-        });
-}); //renders thanks for signing template
 
 app.post("/login", function(req, res) {
     db.getHash(req.body.email)
@@ -157,23 +194,6 @@ app.post("/login", function(req, res) {
                 error: true
             });
         });
-});
-
-app.get("/petition/signers", function(req, res) {
-    db.getSignatures().then(data => {
-        res.render("signers", {
-            names: data.rows
-        });
-    });
-});
-
-app.get("/logout", function(req, res) {
-    if (req.session) {
-        req.session = null;
-        res.redirect("/login");
-    } else {
-        res.redirect("/login");
-    }
 });
 
 app.listen(8080, () => {

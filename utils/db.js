@@ -38,3 +38,25 @@ exports.getHash = function(email) {
         [email]
     );
 };
+
+exports.addProfile = function(age, city, url, user_id) {
+    return db.query(
+        `INSERT INTO user_profiles (age, city, url, user_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING user_id
+    `,
+        [age, city, url, user_id]
+    );
+};
+
+exports.getSigners = function() {
+    return db.query(
+        `SELECT firstname, lastname, age, city, url
+        FROM users
+        JOIN signatures
+        ON users.id = signatures.user_id
+        JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        `
+    );
+};
