@@ -196,6 +196,11 @@ app.post("/login", function(req, res) {
         });
 });
 
-app.listen(8080, () => {
+// app.listen(8080, () => {
+//     console.log("my petition server is running");
+// });
+
+//for Heroku
+app.listen(process.env.PORT || 8080, () => {
     console.log("my petition server is running");
 });
