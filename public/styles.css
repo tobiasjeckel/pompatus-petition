@@ -52,3 +52,7 @@ input {
 canvas {
     background-color: white;
 }
+
+#logout {
+    align-self: flex-end;
+}

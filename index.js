@@ -167,6 +167,15 @@ app.get("/petition/signers", function(req, res) {
     });
 });
 
+app.get("/logout", function(req, res) {
+    if (req.session) {
+        req.session = null;
+        res.redirect("/login");
+    } else {
+        res.redirect("/login");
+    }
+});
+
 app.listen(8080, () => {
     console.log("my petition server is running");
 });
