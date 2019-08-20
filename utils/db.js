@@ -60,7 +60,7 @@ exports.getSigners = function() {
         FROM users
         JOIN signatures
         ON users.id = signatures.user_id
-        JOIN user_profiles
+        LEFT OUTER JOIN user_profiles
         ON users.id = user_profiles.user_id
         `
     );

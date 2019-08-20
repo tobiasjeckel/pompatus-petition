@@ -97,12 +97,9 @@ app.get("/petition/thanks", function(req, res) {
 app.get("/petition/signers", function(req, res) {
     db.getSigners()
         .then(data => {
+            console.log(data.rows);
             res.render("signers", {
-                firstname: data.rows.firstname,
-                lastname: data.rows.lastname,
-                age: data.rows.age,
-                city: data.rows.city,
-                url: data.rows.url
+                names: data.rows
             });
         })
         .catch(err => {
@@ -140,7 +137,13 @@ app.post("/registration", function(req, res) {
 });
 
 app.post("/profile", function(req, res) {
-    db.addProfile(req.body.age, req.body.city, req.body.url, req.session.id)
+    let url;
+    if (req.body.url.startsWith("http")) {
+        url = req.body.url;
+    } else {
+        url = "http://" + req.body.url;
+    }
+    db.addProfile(req.body.age, req.body.city, url, req.session.id)
         .then(data => {
             console.log("successful enter of profile data: ", data);
             res.redirect("/petition");

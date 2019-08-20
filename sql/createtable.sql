@@ -22,7 +22,7 @@ CREATE TABLE users (
 DROP TABLE IF EXISTS user_profiles;
 CREATE TABLE user_profiles(
     id SERIAL PRIMARY KEY,
-    age INT,
+    age INTEGER,
     city VARCHAR,
     url VARCHAR,
     user_id INTEGER UNIQUE NOT NULL
