@@ -1,6 +1,12 @@
 <h1>List of all Signers</h1>
 <ol class ="names">
 {{#names}}
-    <li class = "name"><a href="{{url}}">{{firstname}} {{lastname}}</a> {{age}} {{city}}</li>
+    <li class = "name">
+        {{#if url}}
+        <a href="{{url}}">{{firstname}} {{lastname}}</a> {{age}} <a href="/petition/signers/{{city}}">{{city}}</a>
+        {{else}}
+        {{firstname}} {{lastname}} {{age}} {{city}}
+        {{/if}}
+    </li>
 {{/names}}
 </ol>

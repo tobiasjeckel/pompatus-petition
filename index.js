@@ -107,6 +107,21 @@ app.get("/petition/signers", function(req, res) {
         });
 });
 
+app.get("/petition/signers/:city", function(req, res) {
+    const city = req.params.city;
+    db.getSignersFromCity(city)
+        .then(data => {
+            console.log(data.rows);
+            res.render("cities", {
+                names: data.rows,
+                city: req.params.city
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 app.get("/logout", function(req, res) {
     if (req.session) {
         req.session = null;

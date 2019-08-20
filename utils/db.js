@@ -47,9 +47,9 @@ exports.getHash = function(email) {
 exports.addProfile = function(age, city, url, user_id) {
     return db.query(
         `INSERT INTO user_profiles (age, city, url, user_id)
-    VALUES ($1, $2, $3, $4)
-    RETURNING user_id
-    `,
+        VALUES ($1, $2, $3, $4)
+        RETURNING user_id
+        `,
         [age, city, url, user_id]
     );
 };
@@ -63,5 +63,19 @@ exports.getSigners = function() {
         LEFT OUTER JOIN user_profiles
         ON users.id = user_profiles.user_id
         `
+    );
+};
+
+exports.getSignersFromCity = function(city) {
+    return db.query(
+        `SELECT firstname, lastname, age, city, url
+        FROM users
+        JOIN signatures
+        ON users.id = signatures.user_id
+        LEFT OUTER JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        WHERE city = $1
+        `,
+        [city]
     );
 };
