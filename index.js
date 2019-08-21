@@ -77,12 +77,8 @@ app.get("/profile/edit", function(req, res) {
 app.get("/petition", function(req, res) {
     db.getSigId(req.session.id)
         .then(data => {
-            if (data.rows[0].user_id == undefined) {
-                res.render("petition");
-            } else {
-                req.session.sigid = data.rows[0].id;
-                res.redirect("/petition/thanks");
-            }
+            req.session.sigid = data.rows[0].id;
+            res.redirect("/petition/thanks");
         })
         .catch(err => {
             console.log("signature not available yet: ", err);
@@ -91,7 +87,7 @@ app.get("/petition", function(req, res) {
 }); //renders sign petition template
 
 app.get("/petition/thanks", function(req, res) {
-    console.log("sigid is", req.session.sigid); //admin11 is sig8
+    console.log("sigid is: ", req.session.sigid);
     if (req.session.sigid) {
         db.getSignature(req.session.id)
             .then(data => {
@@ -112,7 +108,7 @@ app.get("/petition/thanks", function(req, res) {
 app.get("/petition/signers", function(req, res) {
     db.getSigners()
         .then(data => {
-            console.log(data.rows);
+            console.log(data);
             res.render("signers", {
                 names: data.rows
             });
@@ -126,7 +122,6 @@ app.get("/petition/signers/:city", function(req, res) {
     const city = req.params.city;
     db.getSignersFromCity(city)
         .then(data => {
-            console.log(data.rows);
             res.render("cities", {
                 names: data.rows,
                 city: req.params.city
@@ -148,10 +143,8 @@ app.get("/logout", function(req, res) {
 
 app.post("/registration", function(req, res) {
     bc.hash(req.body.password).then(hash => {
-        // console.log("hash: ", hash);
         db.addUser(req.body.firstname, req.body.lastname, req.body.email, hash)
             .then(data => {
-                // console.log(data);
                 req.session.id = data.rows[0].id;
                 req.session.firstname = data.rows[0].firstname;
                 res.redirect("/profile");
@@ -159,7 +152,6 @@ app.post("/registration", function(req, res) {
             .catch(function(err) {
                 console.log(err);
                 res.render("registration", {
-                    // csrfToken: req.csrfToken(),
                     error: true
                 });
             });
@@ -168,7 +160,9 @@ app.post("/registration", function(req, res) {
 
 app.post("/profile", function(req, res) {
     let url;
-    if (req.body.url.startsWith("http")) {
+    if (!req.body.url) {
+        url = null;
+    } else if (req.body.url.startsWith("http")) {
         url = req.body.url;
     } else {
         url = "http://" + req.body.url;
@@ -187,13 +181,16 @@ app.post("/profile", function(req, res) {
 });
 
 app.post("/profile/edit", function(req, res) {
+    let url;
+    if (!req.body.url) {
+        url = null;
+    } else if (req.body.url.startsWith("http")) {
+        url = req.body.url;
+    } else {
+        url = "http://" + req.body.url;
+    }
     if (req.body.password == "") {
-        db.editProfile(
-            req.body.age,
-            req.body.city,
-            req.body.homepage,
-            req.session.id
-        )
+        db.editProfile(req.body.age, req.body.city, url, req.session.id)
             .then(
                 db
                     .editUser(
@@ -208,25 +205,20 @@ app.post("/profile/edit", function(req, res) {
                     })
                     .catch(err => {
                         console.log(err);
-                        res.render("profile/edit", {
+                        res.render("edit", {
                             error: true
                         });
                     })
             )
             .catch(err => {
-                console.log(err);
-                res.render("profile/edit", {
+                console.log("int error", err);
+                res.render("edit", {
                     error: true
                 });
             });
     } else {
         bc.hash(req.body.password).then(hash => {
-            db.editProfile(
-                req.body.age,
-                req.body.city,
-                req.body.homepage,
-                req.session.id
-            )
+            db.editProfile(req.body.age, req.body.city, url, req.session.id)
                 .then(
                     db
                         .editUserAndPass(
@@ -260,22 +252,18 @@ app.post("/profile/edit", function(req, res) {
 app.post("/petition", function(req, res) {
     db.addSignature(req.session.id, req.body.signature)
         .then(data => {
-            console.log(data);
             req.session.sigid = data.rows[0].id;
             res.redirect("/petition/thanks");
         })
-        //if insert is successful then set session cookie and redirect to /thanks
         .catch(function(err) {
             console.log(err);
             res.render("petition", {
-                // csrfToken: req.csrfToken(),
                 error: true
-            }); // add class on to error message
+            });
         });
-}); //post user input to database
+});
 
 app.post("/petition/thanks", function(req, res) {
-    console.log(req.session.id);
     db.deleteSignature(req.session.id)
         .then(function() {
             req.session.sigid = null;
@@ -304,7 +292,6 @@ app.post("/login", function(req, res) {
         .catch(err => {
             console.log(err);
             res.render("login", {
-                // csrfToken: req.csrfToken(),
                 error: true
             });
         });

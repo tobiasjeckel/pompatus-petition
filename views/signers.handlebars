@@ -5,7 +5,7 @@
         {{#if url}}
         <a href="{{url}}">{{firstname}} {{lastname}}</a> {{age}} <a href="/petition/signers/{{city}}">{{city}}</a>
         {{else}}
-        {{firstname}} {{lastname}} {{age}} {{city}}
+        {{firstname}} {{lastname}} {{age}} <a href="/petition/signers/{{city}}">{{city}}</a>
         {{/if}}
     </li>
 {{/names}}

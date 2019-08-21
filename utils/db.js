@@ -58,7 +58,7 @@ exports.addProfile = function(age, city, url, user_id) {
         VALUES ($1, $2, $3, $4)
         RETURNING user_id
         `,
-        [age, city, url, user_id]
+        [age || null, city || null, url || null, user_id]
     );
 };
 
@@ -92,7 +92,7 @@ exports.getUser = function(id) {
     return db.query(
         `SELECT firstname, lastname, email, age, city, url
         FROM users
-        JOIN user_profiles
+        LEFT OUTER JOIN user_profiles
         ON users.id = user_profiles.user_id
         WHERE users.id = $1
         `,
@@ -107,7 +107,7 @@ exports.editProfile = function(age, city, url, id) {
         ON CONFLICT (user_id)
         DO UPDATE SET age = $1, city = $2, url = $3
         `,
-        [age, city, url, id]
+        [age || null, city || null, url || null, id]
     );
 };
 
