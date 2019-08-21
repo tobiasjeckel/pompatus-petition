@@ -202,6 +202,10 @@ app.post("/profile/edit", function(req, res) {
                         req.body.email,
                         req.session.id
                     )
+                    .then(data => {
+                        req.session.firstname = data.rows[0].firstname;
+                        res.redirect("/petition");
+                    })
                     .catch(err => {
                         console.log(err);
                         res.render("profile/edit", {
@@ -209,7 +213,6 @@ app.post("/profile/edit", function(req, res) {
                         });
                     })
             )
-            .then(res.redirect("/petition"))
             .catch(err => {
                 console.log(err);
                 res.render("profile/edit", {
@@ -217,7 +220,6 @@ app.post("/profile/edit", function(req, res) {
                 });
             });
     } else {
-        console.log("password route");
         bc.hash(req.body.password).then(hash => {
             db.editProfile(
                 req.body.age,
@@ -234,6 +236,10 @@ app.post("/profile/edit", function(req, res) {
                             req.session.id,
                             hash
                         )
+                        .then(data => {
+                            req.session.firstname = data.rows[0].firstname;
+                            res.redirect("/petition");
+                        })
                         .catch(err => {
                             console.log(err);
                             res.render("profile/edit", {
@@ -241,7 +247,6 @@ app.post("/profile/edit", function(req, res) {
                             });
                         })
                 )
-                .then(res.redirect("/petition"))
                 .catch(err => {
                     console.log(err);
                     res.render("profile/edit", {
@@ -269,6 +274,18 @@ app.post("/petition", function(req, res) {
         });
 }); //post user input to database
 
+app.post("/petition/thanks", function(req, res) {
+    console.log(req.session.id);
+    db.deleteSignature(req.session.id)
+        .then(function() {
+            req.session.sigid = null;
+            res.redirect("/petition");
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 app.post("/login", function(req, res) {
     db.getHash(req.body.email)
         .then(data => {
@@ -293,36 +310,7 @@ app.post("/login", function(req, res) {
         });
 });
 
-// app.listen(8080, () => {
-//     console.log("my petition server is running");
-// });
-
 //for Heroku
 app.listen(process.env.PORT || 8080, () => {
     console.log("my petition server is running");
 });
-
-//---backup petition route---
-
-// app.get("/petition", function(req, res) {
-//     console.log(
-//         "at petition site the user id and name is: ",
-//         req.session.id,
-//         req.session.firstname
-//     );
-//     db.getSignature(req.session.id)
-//         .then(data => {
-//             console.log(data);
-//             if (data.rows[0].user_id == undefined) {
-//                 res.render("petition");
-//                 console.log("signature not available yet");
-//             } else {
-//                 console.log("this user has signed the petition ", data.user_id);
-//                 res.redirect("/petition/thanks");
-//             }
-//         })
-//         .catch(err => {
-//             console.log("signature not available yet: ", err);
-//             res.render("petition", {});
-//         });
-// }); //renders sign petition template

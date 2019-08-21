@@ -117,6 +117,7 @@ exports.editUser = function(firstname, lastname, email, id) {
         UPDATE users
         SET firstname = $1, lastname = $2, email = $3
         WHERE id = $4
+        RETURNING firstname
         `,
         [firstname, lastname, email, id]
     );
@@ -128,7 +129,18 @@ exports.editUserAndPass = function(firstname, lastname, email, id, hash) {
         UPDATE users
         SET firstname = $1, lastname = $2, email = $3, password = $5
         WHERE id = $4
+        RETURNING firstname
         `,
         [firstname, lastname, email, id, hash]
+    );
+};
+
+exports.deleteSignature = function(id) {
+    return db.query(
+        `
+        DELETE FROM signatures
+        WHERE user_id = $1
+        `,
+        [id]
     );
 };
