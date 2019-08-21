@@ -191,18 +191,8 @@ app.post("/profile/edit", function(req, res) {
         url = "http://" + req.body.url;
     }
 
-    let age = parseInt(req.body.age, 10);
-
-    if (Number.isNaN(age)) {
-        console.log("is not an integer");
-        age = null;
-    } else {
-        console.log("is number", age);
-        age = req.body.age;
-    }
-
     if (req.body.password == "") {
-        db.editProfile(age, req.body.city, url, req.session.id)
+        db.editProfile(req.body.age, req.body.city, url, req.session.id)
             .then(
                 db
                     .editUser(
@@ -230,7 +220,7 @@ app.post("/profile/edit", function(req, res) {
             });
     } else {
         bc.hash(req.body.password).then(hash => {
-            db.editProfile(age, req.body.city, url, req.session.id)
+            db.editProfile(req.body.age, req.body.city, url, req.session.id)
                 .then(
                     db
                         .editUserAndPass(
