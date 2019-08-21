@@ -57,20 +57,30 @@ app.get("/profile", function(req, res) {
     res.render("profile", {});
 });
 
-app.get("/petition", function(req, res) {
-    console.log(
-        "at petition site the user id and name is: ",
-        req.session.id,
-        req.session.firstname
-    );
-    db.getSignature(req.session.id)
+app.get("/profile/edit", function(req, res) {
+    db.getUser(req.session.id)
         .then(data => {
-            console.log(data);
+            res.render("edit", {
+                firstname: data.rows[0].firstname,
+                lastname: data.rows[0].lastname,
+                email: data.rows[0].email,
+                age: data.rows[0].age,
+                city: data.rows[0].city,
+                homepage: data.rows[0].url
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+app.get("/petition", function(req, res) {
+    db.getSigId(req.session.id)
+        .then(data => {
             if (data.rows[0].user_id == undefined) {
                 res.render("petition");
-                console.log("signature not available yet");
             } else {
-                console.log("this user has signed the petition ", data.user_id);
+                req.session.sigid = data.rows[0].id;
                 res.redirect("/petition/thanks");
             }
         })
@@ -81,17 +91,22 @@ app.get("/petition", function(req, res) {
 }); //renders sign petition template
 
 app.get("/petition/thanks", function(req, res) {
-    db.getSignature(req.session.id)
-        .then(data => {
-            res.render("thanks", {
-                firstname: req.session.firstname,
-                signature: data.rows[0].signature
+    console.log("sigid is", req.session.sigid); //admin11 is sig8
+    if (req.session.sigid) {
+        db.getSignature(req.session.id)
+            .then(data => {
+                res.render("thanks", {
+                    firstname: req.session.firstname,
+                    signature: data.rows[0].signature
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                // res.redirect("/login");
             });
-        })
-        .catch(err => {
-            console.log(err);
-            // res.redirect("/login");
-        });
+    } else {
+        res.redirect("/petition");
+    }
 }); //renders thanks for signing template
 
 app.get("/petition/signers", function(req, res) {
@@ -171,10 +186,77 @@ app.post("/profile", function(req, res) {
         });
 });
 
+app.post("/profile/edit", function(req, res) {
+    if (req.body.password == "") {
+        db.editProfile(
+            req.body.age,
+            req.body.city,
+            req.body.homepage,
+            req.session.id
+        )
+            .then(
+                db
+                    .editUser(
+                        req.body.firstname,
+                        req.body.lastname,
+                        req.body.email,
+                        req.session.id
+                    )
+                    .catch(err => {
+                        console.log(err);
+                        res.render("profile/edit", {
+                            error: true
+                        });
+                    })
+            )
+            .then(res.redirect("/petition"))
+            .catch(err => {
+                console.log(err);
+                res.render("profile/edit", {
+                    error: true
+                });
+            });
+    } else {
+        console.log("password route");
+        bc.hash(req.body.password).then(hash => {
+            db.editProfile(
+                req.body.age,
+                req.body.city,
+                req.body.homepage,
+                req.session.id
+            )
+                .then(
+                    db
+                        .editUserAndPass(
+                            req.body.firstname,
+                            req.body.lastname,
+                            req.body.email,
+                            req.session.id,
+                            hash
+                        )
+                        .catch(err => {
+                            console.log(err);
+                            res.render("profile/edit", {
+                                error: true
+                            });
+                        })
+                )
+                .then(res.redirect("/petition"))
+                .catch(err => {
+                    console.log(err);
+                    res.render("profile/edit", {
+                        error: true
+                    });
+                });
+        });
+    }
+});
+
 app.post("/petition", function(req, res) {
     db.addSignature(req.session.id, req.body.signature)
         .then(data => {
             console.log(data);
+            req.session.sigid = data.rows[0].id;
             res.redirect("/petition/thanks");
         })
         //if insert is successful then set session cookie and redirect to /thanks
@@ -190,16 +272,13 @@ app.post("/petition", function(req, res) {
 app.post("/login", function(req, res) {
     db.getHash(req.body.email)
         .then(data => {
-            console.log(data);
             bc.compare(req.body.password, data.rows[0].password).then(match => {
-                console.log("match: ", match);
                 if (match) {
                     req.session.id = data.rows[0].id;
                     req.session.firstname = data.rows[0].firstname;
                     res.redirect("/petition");
                 } else {
                     res.render("login", {
-                        // csrfToken: req.csrfToken(),
                         error: true
                     });
                 }
@@ -222,3 +301,28 @@ app.post("/login", function(req, res) {
 app.listen(process.env.PORT || 8080, () => {
     console.log("my petition server is running");
 });
+
+//---backup petition route---
+
+// app.get("/petition", function(req, res) {
+//     console.log(
+//         "at petition site the user id and name is: ",
+//         req.session.id,
+//         req.session.firstname
+//     );
+//     db.getSignature(req.session.id)
+//         .then(data => {
+//             console.log(data);
+//             if (data.rows[0].user_id == undefined) {
+//                 res.render("petition");
+//                 console.log("signature not available yet");
+//             } else {
+//                 console.log("this user has signed the petition ", data.user_id);
+//                 res.redirect("/petition/thanks");
+//             }
+//         })
+//         .catch(err => {
+//             console.log("signature not available yet: ", err);
+//             res.render("petition", {});
+//         });
+// }); //renders sign petition template
