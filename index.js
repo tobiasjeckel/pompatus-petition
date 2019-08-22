@@ -1,10 +1,11 @@
 const db = require("./utils/db");
 const express = require("express");
-const app = express();
+const app = (exports.app = express());
 const hb = require("express-handlebars");
 const bc = require("./utils/bc");
 const cookieSession = require("cookie-session");
 const csurf = require("csurf");
+const { requireSignature, requireNoLogin } = require("./middleware");
 
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
@@ -43,13 +44,13 @@ app.use(function(req, res, next) {
 
 app.get("/", function(req, res) {
     res.redirect("/registration");
-}); //redirect route
+});
 
-app.get("/registration", function(req, res) {
+app.get("/registration", requireNoLogin, function(req, res) {
     res.render("registration", {});
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", requireNoLogin, function(req, res) {
     res.render("login", {});
 });
 
@@ -86,26 +87,20 @@ app.get("/petition", function(req, res) {
         });
 }); //renders sign petition template
 
-app.get("/petition/thanks", function(req, res) {
-    console.log("sigid is: ", req.session.sigid);
-    if (req.session.sigid) {
-        db.getSignature(req.session.id)
-            .then(data => {
-                res.render("thanks", {
-                    firstname: req.session.firstname,
-                    signature: data.rows[0].signature
-                });
-            })
-            .catch(err => {
-                console.log(err);
-                // res.redirect("/login");
+app.get("/petition/thanks", requireSignature, function(req, res) {
+    db.getSignature(req.session.id)
+        .then(data => {
+            res.render("thanks", {
+                firstname: req.session.firstname,
+                signature: data.rows[0].signature
             });
-    } else {
-        res.redirect("/petition");
-    }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }); //renders thanks for signing template
 
-app.get("/petition/signers", function(req, res) {
+app.get("/petition/signers", requireSignature, function(req, res) {
     db.getSigners()
         .then(data => {
             console.log(data);
@@ -118,7 +113,7 @@ app.get("/petition/signers", function(req, res) {
         });
 });
 
-app.get("/petition/signers/:city", function(req, res) {
+app.get("/petition/signers/:city", requireSignature, function(req, res) {
     const city = req.params.city;
     db.getSignersFromCity(city)
         .then(data => {
@@ -168,8 +163,7 @@ app.post("/profile", function(req, res) {
         url = "http://" + req.body.url;
     }
     db.addProfile(req.body.age, req.body.city, url, req.session.id)
-        .then(data => {
-            console.log("successful enter of profile data: ", data);
+        .then(function() {
             res.redirect("/petition");
         })
         .catch(function(err) {
