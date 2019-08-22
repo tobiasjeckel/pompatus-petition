@@ -1,17 +1,18 @@
-<p> Please sign our petition to support World Peace!</p>
+{{> menuin}}
+<div class ="main">
+    <p> Please sign our petition to support World Peace!</p>
+    <p>Sign Here!</p>
+    {{#if error}}
+    <p class="errormessage">Whoops, something went wrong! Please try again!</p>
+    {{/if}}
 
+    <canvas id="canvas"  width="600" height="150"></canvas>
 
-<p>Sign Here!</p>
-{{#if error}}
-<p class="errormessage">Whoops, something went wrong! Please try again!</p>
-{{/if}}
+    <form method="POST">
+        <input type="hidden" name="signature"  id="sig">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Submit</button>
+    </post>
 
-<canvas id="canvas"  width="600" height="150"></canvas>
-
-<form method="POST">
-    <input type="hidden" name="signature"  id="sig">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Submit</button>
-</post>
-
-<script src="/script.js" charset="utf-8"></script>
+    <script src="/script.js" charset="utf-8"></script>
+</div>

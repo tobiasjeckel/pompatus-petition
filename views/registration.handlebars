@@ -1,19 +1,21 @@
-<p> Please register to support our petition for World Peace!</p>
+{{> menuout}}
+<div class ="main">
+    <h1>Petition for World Peace!</h1>
+    <p> Please register to support our petition for World Peace!</p>
+    <p>Register Here!</p>
+    {{#if error}}
+    <p class="errormessage">Whoops, something went wrong! Please try again!</p>
+    {{/if}}
 
 
-<p>Register Here!</p>
-{{#if error}}
-<p class="errormessage">Whoops, something went wrong! Please try again!</p>
-{{/if}}
+    <form method="POST">
+        <input class="firstchild" name="firstname" placeholder="First name"  required></input>
+        <input name="lastname" placeholder="Last name" required></input>
+        <input name="email" placeholder="Email" required></input>
+        <input class="lastchild" type ="password" id="pass" name="password" minlength="6" placeholder="Password (min 6 character)" required></input>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Sign up</button>
+    </post>
 
-
-<form method="POST">
-    <input class="firstchild" name="firstname" placeholder="First name"  required></input>
-    <input name="lastname" placeholder="Last name" required></input>
-    <input name="email" placeholder="Email" required></input>
-    <input class="lastchild" type ="password" id="pass" name="password" minlength="6" placeholder="Password (min 6 character)" required></input>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Sign up</button>
-</post>
-
-<p> If you are already a member, please <a href="/login">log in</a>.<p>
+    <p> If you are already a member, please <a href="/login">log in</a>.<p>
+</div>

@@ -1,18 +1,20 @@
+{{> menuin}}
+<div class ="main">
+    <p>Edit your profile</p>
+    {{#if error}}
+    <p class="errormessage">Whoops, something went wrong! Please try again!</p>
+    {{/if}}
 
-<p>Edit your profile</p>
-{{#if error}}
-<p class="errormessage">Whoops, something went wrong! Please try again!</p>
-{{/if}}
 
-
-<form method="POST">
-    <input name="firstname" value="{{firstname}}">First Name</input>
-    <input name="lastname" value="{{lastname}}">Last Name</input>
-    <input name="email" value="{{email}}">Email Adress</input>
-    <input type ="password" id="pass" name="password" minlength="6">Password (min 6 characters)</input>
-    <input name="age" type="number" value="{{age}}">Age</input>
-    <input name="city" value="{{city}}">City</input>
-    <input name="url" value="{{homepage}}">Homepage</input>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Update</button>
-</post>
+    <form method="POST">
+        <input name="firstname" value="{{firstname}}">First Name</input>
+        <input name="lastname" value="{{lastname}}">Last Name</input>
+        <input name="email" value="{{email}}">Email Adress</input>
+        <input type ="password" id="pass" name="password" minlength="6">Password (min 6 characters)</input>
+        <input name="age" type="number" value="{{age}}">Age</input>
+        <input name="city" value="{{city}}">City</input>
+        <input name="url" value="{{homepage}}">Homepage</input>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Update</button>
+    </post>
+</div>

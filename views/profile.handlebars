@@ -1,16 +1,18 @@
+{{> menuin}}
+<div class ="main">
+    <p>Now please just tell us a little bit more about yourself!</p>
+    {{#if error}}
+    <p class="errormessage">Whoops, something went wrong! Please try again!</p>
+    {{/if}}
 
-<p>Now please just tell us a little bit more about yourself!</p>
-{{#if error}}
-<p class="errormessage">Whoops, something went wrong! Please try again!</p>
-{{/if}}
 
+    <form method="POST">
+        <input type="number" name="age">Age</input>
+        <input name="city">City</input>
+        <input name="url">Homepage</input>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Submit</button>
+    </post>
 
-<form method="POST">
-    <input type="number" name="age">Age</input>
-    <input name="city">City</input>
-    <input name="url">Homepage</input>
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Submit</button>
-</post>
-
-<p><a href="/petition">Skip this step</a></p>
+    <p><a href="/petition">Skip this step</a></p>
+</div>

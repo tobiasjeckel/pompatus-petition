@@ -1,8 +1,11 @@
-<h1>Thanks for signing our petition {{firstname}}!</h1>
-<img src="{{signature}}">
-<h2><a href="/petition/signers">Click here to see all signers</a></h2>
-<h2><a href="/profile/edit">Edit your profile</a></h2>
-<form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Delete Signature</button>
-</post>
+{{> menuin}}
+<div class ="main">
+    <h1>Thanks for signing our petition {{firstname}}!</h1>
+    <img src="{{signature}}">
+    <h2><a href="/petition/signers">Click here to see all signers</a></h2>
+    <h2><a href="/profile/edit">Edit your profile</a></h2>
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Delete Signature</button>
+    </post>
+</div>

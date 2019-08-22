@@ -1,15 +1,19 @@
+{{> menuout}}
+<div class ="main">
+    <h1>Petition for World Peace!</h1>
+    <p>Please Log in Here!</p>
+    {{#if error}}
+    <p class="errormessage">Whoops, something went wrong! Please try again!</p>
+    {{/if}}
 
-<p>Pleas Log in Here!</p>
-{{#if error}}
-<p class="errormessage">Whoops, something went wrong! Please try again!</p>
-{{/if}}
 
+    <form method="POST">
+        <input class="firstchild" name="email" placeholder="Email" required></input>
+        <input type ="password" id="pass" name="password" placeholder="Password" minlength="6" required></input>
+        <input class="lastchild" type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button id="submit-button" value="submit">Log in</button>
+    </post>
 
-<form method="POST">
-    <input class="firstchild" name="email" placeholder="Email" required></input>
-    <input type ="password" id="pass" name="password" placeholder="Password" minlength="6" required></input>
-    <input class="lastchild" type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button id="submit-button" value="submit">Log in</button>
-</post>
+    <p> Don't have an account?<a href="/registration">Sign up</a><p>
 
-<p> Don't have an account?<a href="/registration">Sign up</a><p>
+</div>

@@ -1,12 +1,15 @@
-<h1>List of all Signers from {{city}}</h1>
-<ol class ="names">
-{{#names}}
-    <li class = "name">
-        {{#if url}}
-        <a href="{{url}}" target="_blank">{{firstname}} {{lastname}}</a> {{age}}
-        {{else}}
-        {{firstname}} {{lastname}} {{age}}
-        {{/if}}
-    </li>
-{{/names}}
-</ol>
+{{> menuin}}
+<div class ="main">
+    <h1>List of all Signers from {{city}}</h1>
+    <ol class ="names">
+    {{#names}}
+        <li class = "name">
+            {{#if url}}
+            <a href="{{url}}" target="_blank">{{firstname}} {{lastname}}</a> {{age}}
+            {{else}}
+            {{firstname}} {{lastname}} {{age}}
+            {{/if}}
+        </li>
+    {{/names}}
+    </ol>
+</div>

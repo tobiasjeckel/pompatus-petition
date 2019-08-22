@@ -1,3 +1,13 @@
+html,
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    color: #222831;
+}
+
 #canvas {
     border: 1px solid black;
     display: block;
@@ -93,16 +103,6 @@ footer {
     color: #eeeeee;
     display: flex;
     align-items: center;
-}
-
-html,
-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    margin: 0;
-    font-family: "Helvetica";
-    color: #222831;
 }
 
 .errormessage {
