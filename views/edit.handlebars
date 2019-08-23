@@ -8,13 +8,27 @@
 
 
         <form id="editprofile" method="POST">
-            <input name="firstname" value="{{firstname}}">First Name</input>
-            <input name="lastname" value="{{lastname}}">Last Name</input>
-            <input name="email" value="{{email}}">Email Adress</input>
-            <input type ="password" id="pass" name="password" minlength="6">Password (min 6 characters)</input>
-            <input name="age" type="number" value="{{age}}">Age</input>
-            <input name="city" value="{{city}}">City</input>
-            <input name="url" value="{{homepage}}">Homepage</input>
+            <label>First name:
+            <input name="firstname" value="{{firstname}}">
+            </label>
+            <label>Last name:
+            <input name="lastname" value="{{lastname}}">
+            </label>
+            <label>Email:
+            <input name="email" value="{{email}}">
+            </label>
+            <label>Password:
+            <input type ="password" id="pass" name="password" placeholder="Password (min 6 character)" minlength="6">
+            </label>
+            <label> Age:
+            Age: <input name="age" type="number" value="{{age}}">
+            </label>
+            <label>City:
+            <input name="city" value="{{city}}">
+            </label>
+            <label>Homepage:
+            <input name="url" value="{{homepage}}">
+            </label>
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
             <button id="submit-button" value="submit">Update</button>
         </post>

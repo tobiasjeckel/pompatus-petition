@@ -10,7 +10,7 @@ body {
     margin: 0;
     font-family: Helvetica, Arial, sans-serif;
     color: #222831;
-    background-image: url("https://static.change.org/home/illustration-world-map-2015-08-18.gif");
+    background-image: url("/assets/illustration-world-map-2015-08-18.gif");
     background-size: contain;
     background-repeat: no-repeat;
 }

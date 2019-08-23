@@ -6,9 +6,9 @@
         {{#names}}
             <li class = "name">
                 {{#if url}}
-                <a href="{{url}}" target="_blank">{{firstname}} {{lastname}}</a> {{age}} <a href="/petition/signers/{{city}}">{{city}}</a>
+                <a href="{{url}}" target="_blank">{{firstname}} | {{lastname}}</a> | {{age}} | <a href="/petition/signers/{{city}}">{{city}}</a>
                 {{else}}
-                {{firstname}} {{lastname}} {{age}} <a href="/petition/signers/{{city}}">{{city}}</a>
+                {{firstname}} | {{lastname}} | {{age}} | <a href="/petition/signers/{{city}}">{{city}}</a>
                 {{/if}}
             </li>
         {{/names}}
