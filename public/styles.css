@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html,
 body {
     display: flex;
@@ -53,10 +57,16 @@ a:visited {
     font-size: 1.5em;
 }
 
+.header img {
+    height: 100%;
+    align-self: flex-start;
+}
+
 .main {
     padding: 50px 15px;
     flex-grow: 1;
     align-self: center;
+    width: 100%;
 }
 
 input {
@@ -112,7 +122,12 @@ button:hover {
 }
 
 form {
-    width: 300px;
+    width: 100%;
+    max-width: 350px;
+}
+
+#editprofile {
+    max-width: 450px;
 }
 footer {
     background-color: #393e46;
