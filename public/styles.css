@@ -88,6 +88,10 @@ input {
     grid-gap: 0 20px;
 }
 
+.centercontainer {
+    max-width: 1000px;
+}
+
 .content {
     grid-column: 1 / 3;
 }
@@ -128,6 +132,7 @@ form {
 }
 
 #editprofile {
+    width: 100%;
     max-width: 450px;
 }
 footer {
