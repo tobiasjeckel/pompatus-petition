@@ -103,7 +103,6 @@ app.get("/petition/thanks", requireSignature, function(req, res) {
 app.get("/petition/signers", requireSignature, function(req, res) {
     db.getSigners()
         .then(data => {
-            console.log(data);
             res.render("signers", {
                 names: data.rows
             });
