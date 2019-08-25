@@ -57,9 +57,42 @@ a:visited {
     font-size: 1.5em;
 }
 
+.centercontainer a {
+    color: #393e46;
+    text-decoration: none;
+}
+
+.centercontainer a:hover {
+    color: #00adb5;
+    text-decoration: none;
+}
+
 .header img {
     height: 100%;
     align-self: flex-start;
+}
+
+#deletebutton {
+    color: #393e46;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 1.5em;
+    border: 0;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 0;
+}
+
+#deletebutton:hover {
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #00adb5;
+    border: 0;
+    text-align: left;
+    padding-left: 0;
+    cursor: pointer;
 }
 
 .main {

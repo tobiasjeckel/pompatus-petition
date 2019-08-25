@@ -1,7 +1,7 @@
 {{> menuin}}
 <div class ="main">
     <div class="centercontainer">
-        <p>Edit your profile</p>
+        <h1>Edit your profile</h1>
         {{#if error}}
         <p class="errormessage">Whoops, something went wrong! Please try again!</p>
         {{/if}}
@@ -21,7 +21,7 @@
             <input type ="password" id="pass" name="password" placeholder="Password (min 6 character)" minlength="6">
             </label>
             <label> Age:
-            Age: <input name="age" type="number" value="{{age}}">
+            <input name="age" type="number" value="{{age}}">
             </label>
             <label>City:
             <input name="city" value="{{city}}">
