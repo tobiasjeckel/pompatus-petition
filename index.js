@@ -66,8 +66,7 @@ app.get("/profile/edit", function(req, res) {
                 lastname: data.rows[0].lastname,
                 email: data.rows[0].email,
                 age: data.rows[0].age,
-                city: data.rows[0].city,
-                homepage: data.rows[0].url
+                city: data.rows[0].city
             });
         })
         .catch(err => {
@@ -153,15 +152,7 @@ app.post("/registration", function(req, res) {
 });
 
 app.post("/profile", function(req, res) {
-    let url;
-    if (!req.body.url) {
-        url = null;
-    } else if (req.body.url.startsWith("http")) {
-        url = req.body.url;
-    } else {
-        url = "http://" + req.body.url;
-    }
-    db.addProfile(req.body.age, req.body.city, url, req.session.id)
+    db.addProfile(req.body.age, req.body.city, req.session.id)
         .then(function() {
             res.redirect("/petition");
         })
@@ -174,18 +165,8 @@ app.post("/profile", function(req, res) {
 });
 
 app.post("/profile/edit", function(req, res) {
-    let url;
-
-    if (!req.body.url) {
-        url = null;
-    } else if (req.body.url.startsWith("http")) {
-        url = req.body.url;
-    } else {
-        url = "http://" + req.body.url;
-    }
-
     if (req.body.password == "") {
-        db.editProfile(req.body.age, req.body.city, url, req.session.id)
+        db.editProfile(req.body.age, req.body.city, req.session.id)
             .then(
                 db
                     .editUser(
@@ -213,7 +194,7 @@ app.post("/profile/edit", function(req, res) {
             });
     } else {
         bc.hash(req.body.password).then(hash => {
-            db.editProfile(req.body.age, req.body.city, url, req.session.id)
+            db.editProfile(req.body.age, req.body.city, req.session.id)
                 .then(
                     db
                         .editUserAndPass(

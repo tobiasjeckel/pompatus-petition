@@ -52,19 +52,19 @@ exports.getHash = function(email) {
     );
 };
 
-exports.addProfile = function(age, city, url, user_id) {
+exports.addProfile = function(age, city, user_id) {
     return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)
+        `INSERT INTO user_profiles (age, city, user_id)
+        VALUES ($1, $2, $3)
         RETURNING user_id
         `,
-        [age || null, city || null, url || null, user_id]
+        [age || null, city || null, user_id]
     );
 };
 
 exports.getSigners = function() {
     return db.query(
-        `SELECT firstname, lastname, age, city, url
+        `SELECT firstname, lastname, age, city
         FROM users
         JOIN signatures
         ON users.id = signatures.user_id
@@ -76,7 +76,7 @@ exports.getSigners = function() {
 
 exports.getSignersFromCity = function(city) {
     return db.query(
-        `SELECT firstname, lastname, age, city, url
+        `SELECT firstname, lastname, age, city
         FROM users
         JOIN signatures
         ON users.id = signatures.user_id
@@ -90,7 +90,7 @@ exports.getSignersFromCity = function(city) {
 
 exports.getUser = function(id) {
     return db.query(
-        `SELECT firstname, lastname, email, age, city, url
+        `SELECT firstname, lastname, email, age, city
         FROM users
         LEFT OUTER JOIN user_profiles
         ON users.id = user_profiles.user_id
@@ -100,14 +100,14 @@ exports.getUser = function(id) {
     );
 };
 
-exports.editProfile = function(age, city, url, id) {
+exports.editProfile = function(age, city, id) {
     return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)
+        `INSERT INTO user_profiles (age, city, user_id)
+        VALUES ($1, $2, $3)
         ON CONFLICT (user_id)
-        DO UPDATE SET age = $1, city = $2, url = $3
+        DO UPDATE SET age = $1, city = $2
         `,
-        [age || null, city || null, url || null, id]
+        [age || null, city || null, id]
     );
 };
 
