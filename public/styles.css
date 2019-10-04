@@ -159,6 +159,10 @@ button:hover {
     background-color: #009ba2;
 }
 
+#submit-button {
+    margin-top: 15px;
+}
+
 form {
     width: 100%;
     max-width: 350px;
