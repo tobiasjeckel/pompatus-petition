@@ -2,10 +2,9 @@
 'Make Latin great again' is an ironic online petition where users can register and sign to support a cause. Made during my time at Spiced Academy.
 ## Preview
 
-[Registration and Login](https://github.com/tobiasjeckel/pompatus-petition/blob/master/gifs/register-and-sign.gif)
+![Registration and Login](https://github.com/tobiasjeckel/pompatus-petition/blob/master/gifs/register-and-sign.gif)
 
-[Edit Profile](https://github.com/tobiasjeckel/pompatus-petition/blob/master/gifs/edit-profile.gif)
-
+![Edit Profile](https://github.com/tobiasjeckel/pompatus-petition/blob/master/gifs/edit-profile.gif)
 
 ## Live Demo
 
